@@ -1,8 +1,9 @@
 package com.ticket.controller;
 
 import com.ticket.dto.ResponseTicketIdDto;
+import com.ticket.dto.TicketCreatingDto;
 import com.ticket.dto.TicketInfoDto;
-import com.ticket.dto.TicketPaymentDto;
+import com.ticket.dto.PaymentCreatingDto;
 import com.ticket.service.TicketService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,8 +25,8 @@ public class TicketController {
     }
 
     @PostMapping
-    public ResponseTicketIdDto buyTicket(@RequestBody TicketPaymentDto ticketPaymentDto) {
-        Long ticketId = ticketService.buyTicket(ticketPaymentDto).getId();
+    public ResponseTicketIdDto buyTicket(@RequestBody TicketCreatingDto ticketCreatingDto) {
+        Long ticketId = ticketService.buyTicket(ticketCreatingDto).getId();
         return new ResponseTicketIdDto(ticketId);
     }
 }

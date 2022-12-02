@@ -1,14 +1,19 @@
 package com.ticket.service.impl;
 
 import com.ticket.client.PaymentService;
+import com.ticket.domain.Payment;
 import com.ticket.domain.Ticket;
 import com.ticket.domain.Trip;
+import com.ticket.dto.TicketCreatingDto;
 import com.ticket.dto.TicketInfoDto;
-import com.ticket.dto.TicketPaymentDto;
-import com.ticket.mapper.TicketPaymentDtoToTicketMapper;
+import com.ticket.dto.PaymentCreatingDto;
+import com.ticket.exception.EntityNotFoundException;
+import com.ticket.mapper.TicketDtoToPaymentDtoMapper;
+import com.ticket.mapper.ToTicketMapper;
+import com.ticket.mapper.ToTicketInfoDtoMapper;
 import com.ticket.repository.TicketRepository;
-import com.ticket.repository.TripRepository;
 import com.ticket.service.TicketService;
+import com.ticket.service.TripService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,22 +23,32 @@ import org.springframework.transaction.annotation.Transactional;
 public class TicketServiceImpl implements TicketService {
     private final TicketRepository ticketRepository;
     private final PaymentService paymentService;
-    private final TripRepository tripRepository;
-    private final TicketPaymentDtoToTicketMapper ticketMapper;
+    private final TripService tripService;
+    private final ToTicketMapper ticketMapper;
+    private final TicketDtoToPaymentDtoMapper paymentDtoMapper;
+    private final ToTicketInfoDtoMapper ticketInfoDtoMapper;
 
     @Override
     @Transactional
-    public Ticket buyTicket(TicketPaymentDto ticketPaymentDto) {
-        Trip trip = tripRepository.findById(ticketPaymentDto.getTripId()).orElseThrow();
-        Long paymentId = paymentService.payForTicket(ticketPaymentDto).getPaymentId();
-        Ticket ticket = ticketMapper.map(ticketPaymentDto);
-        ticket.setTripId(trip.getId());
-        ticket.setPaymentId(paymentId);
+    public Ticket buyTicket(TicketCreatingDto ticketCreatingDto) {
+        Trip updatedTrip = tripService.decreaseAvailableTickets(ticketCreatingDto.getTripId());
+        PaymentCreatingDto paymentCreatingDto = paymentDtoMapper.map(ticketCreatingDto);
+        Long paymentId = paymentService.payForTicket(paymentCreatingDto).getPaymentId();
+        Ticket ticket = ticketMapper.map(paymentCreatingDto, updatedTrip.getId(), paymentId);
         return ticketRepository.save(ticket);
     }
 
     @Override
     public TicketInfoDto getTicketInfo(Long ticketId) {
+        Ticket ticket = ticketRepository.findById(ticketId)
+                .orElseThrow(() -> new EntityNotFoundException("ticket with id " + ticketId + " not found"));
+        Trip trip = tripService.findById(ticket.getTripId());
+        Payment payment = paymentService.findById(ticket.getPaymentId());
+        return ticketInfoDtoMapper.map(trip, payment.getStatus());
+    }
+
+    @Override
+    public Ticket findByPaymentId(Long paymentId) {
         return null;
     }
 }

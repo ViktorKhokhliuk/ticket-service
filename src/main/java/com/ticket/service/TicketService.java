@@ -1,12 +1,13 @@
 package com.ticket.service;
 
 import com.ticket.domain.Ticket;
-import com.ticket.domain.Trip;
+import com.ticket.dto.TicketCreatingDto;
 import com.ticket.dto.TicketInfoDto;
-import com.ticket.dto.TicketPaymentDto;
 
 public interface TicketService {
-    Ticket buyTicket(TicketPaymentDto ticketPaymentDto);
+    Ticket buyTicket(TicketCreatingDto ticketCreatingDto);
 
     TicketInfoDto getTicketInfo(Long ticketId);
+
+    Ticket findByPaymentId(Long paymentId);
 }

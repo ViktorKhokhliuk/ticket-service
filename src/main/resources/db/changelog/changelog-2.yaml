@@ -1,0 +1,47 @@
+databaseChangeLog:
+  - changeSet:
+      id: ticket-table
+      author: Viktor_Khokhliuk
+      changes:
+        - createTable:
+            tableName: ticket
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey:  true
+                    nullable:  false
+              - column:
+                  name: first_name
+                  type: VARCHAR(60)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_name
+                  type: VARCHAR(60)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: patronymic
+                  type: VARCHAR(60)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: payment_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: trip_id
+                  type: BIGINT
+                  constraints:
+                    nullable: fal
+        - addForeignKeyConstraint:
+            baseColumnNames: trip_id
+            baseTableName: ticket
+            constraintName: fk_trip_id
+            onDelete: CASCADE
+            referencedColumnNames: id
+            referencedTableName: trip
