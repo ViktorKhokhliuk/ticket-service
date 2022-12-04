@@ -40,4 +40,12 @@ public class Trip {
 
     @Column("available_tickets")
     private int availableTickets;
+
+    public void increaseAvailableTickets() {
+        this.availableTickets++;
+    }
+
+    public void decreaseAvailableTickets() {
+        this.availableTickets--;
+    }
 }

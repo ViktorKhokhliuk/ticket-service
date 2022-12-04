@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.time.LocalDateTime;
 
@@ -27,6 +28,13 @@ public class TicketServiceExceptionHandler {
         ErrorResponseDto errorResponseDto = new ErrorResponseDto(exception.getMessage(), LocalDateTime.now());
         log.error(exception.getMessage(), exception);
         return new ResponseEntity<>(errorResponseDto, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponseDto> handleException(HttpClientErrorException exception) {
+        ErrorResponseDto errorResponseDto = new ErrorResponseDto(exception.getMessage(), LocalDateTime.now());
+        log.error(exception.getMessage(), exception);
+        return new ResponseEntity<>(errorResponseDto, exception.getStatusCode());
     }
 
     @ExceptionHandler

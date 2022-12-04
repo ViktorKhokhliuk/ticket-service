@@ -26,20 +26,18 @@ public class TripServiceImpl implements TripService {
 
     @Override
     public Trip decreaseAvailableTickets(Long tripId) {
-        Trip trip = this.findById(tripId);
-        int availableTickets = trip.getAvailableTickets() - 1;
-        if (availableTickets < 0) {
+        Trip trip = findById(tripId);
+        trip.decreaseAvailableTickets();
+        if (trip.getAvailableTickets() < 0) {
             throw new NoAvailableTicketsException("there are no available tickets");
         }
-        trip.setAvailableTickets(availableTickets);
         return tripRepository.save(trip);
     }
 
     @Override
     public Trip increaseAvailableTickets(Long tripId) {
-        Trip trip = this.findById(tripId);
-        int availableTickets = trip.getAvailableTickets() + 1;
-        trip.setAvailableTickets(availableTickets);
+        Trip trip = findById(tripId);
+        trip.increaseAvailableTickets();
         return tripRepository.save(trip);
     }
 }

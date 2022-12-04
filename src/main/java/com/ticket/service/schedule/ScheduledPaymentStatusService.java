@@ -2,6 +2,7 @@ package com.ticket.service.schedule;
 
 import com.ticket.client.PaymentService;
 import com.ticket.domain.Payment;
+import com.ticket.domain.PaymentStatus;
 import com.ticket.statushandler.PaymentStatusHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -12,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Map;
 
-import static com.ticket.domain.PaymentStatus.DONE;
 import static com.ticket.domain.PaymentStatus.NEW;
 
 @Service
@@ -20,18 +20,24 @@ import static com.ticket.domain.PaymentStatus.NEW;
 @RequiredArgsConstructor
 public class ScheduledPaymentStatusService {
     private final PaymentService paymentService;
-    private final Map<String, PaymentStatusHandler> handlerMap;
+    private final Map<PaymentStatus, PaymentStatusHandler> handlerMap;
 
-    @Scheduled(fixedDelayString = "${fixedDelaySeconds}000")
+    @Scheduled(fixedDelayString = "${fixedDelay}")
     @Transactional
     public void handleTicketsByPaymentStatus() {
-        log.info("Scheduled");
+        log.info("Payment processing");
         List<Payment> updatedPayments = paymentService.findAllByStatus(NEW)
                 .stream()
-                .peek(payment -> payment.setStatus(paymentService.findPaymentStatusById(payment.getId())))
+                .map(this::updateStatus)
+                .map(payment -> handlerMap.get(payment.getStatus()).handle(payment))
                 .toList();
 
-        updatedPayments.forEach(payment -> handlerMap.getOrDefault(payment.getStatus().name(), handlerMap.get(DONE.name())).handle(payment));
         paymentService.updateAll(updatedPayments);
+    }
+
+    private Payment updateStatus(Payment payment) {
+        PaymentStatus paymentStatusById = paymentService.findPaymentStatusById(payment.getId());
+        payment.setStatus(paymentStatusById);
+        return payment;
     }
 }

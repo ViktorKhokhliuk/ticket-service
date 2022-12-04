@@ -7,9 +7,8 @@ import com.ticket.domain.PaymentStatus;
 import com.ticket.statushandler.PaymentStatusHandler;
 import com.ticket.statushandler.impl.DonePaymentStatusHandler;
 import com.ticket.statushandler.impl.FailedPaymentStatusHandler;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 
 import java.util.List;
 import java.util.Map;
@@ -22,21 +21,20 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ScheduledPaymentStatusServiceTest extends AbstractUnitTest {
     private PaymentService paymentService;
     private FailedPaymentStatusHandler failedPaymentStatusHandler;
     private DonePaymentStatusHandler donePaymentStatusHandler;
     private ScheduledPaymentStatusService statusService;
 
-    @BeforeAll
+    @BeforeEach
     void init() {
         paymentService = mock(PaymentService.class);
         failedPaymentStatusHandler = mock(FailedPaymentStatusHandler.class);
         donePaymentStatusHandler = mock(DonePaymentStatusHandler.class);
-        Map<String, PaymentStatusHandler> statusHandlerMap = Map.of(
-                "FAILED", failedPaymentStatusHandler,
-                "DONE", donePaymentStatusHandler);
+        Map<PaymentStatus, PaymentStatusHandler> statusHandlerMap = Map.of(
+                PaymentStatus.FAILED, failedPaymentStatusHandler,
+                PaymentStatus.DONE, donePaymentStatusHandler);
         statusService = new ScheduledPaymentStatusService(paymentService, statusHandlerMap);
     }
 

@@ -8,6 +8,6 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
 
-fixedDelaySeconds: 20
+fixedDelay: 10000
 paymentService:
   url: http://localhost:8081/payments

@@ -23,7 +23,6 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public PaymentStatus findPaymentStatusById(Long paymentId) {
         return restTemplate.getForObject(basePaymentServiceUrl + "/status/" + paymentId, PaymentStatus.class);
-
     }
 
     @Override
