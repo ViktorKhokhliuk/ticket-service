@@ -9,14 +9,13 @@ import org.springframework.stereotype.Component;
 public class ToTicketInfoDtoMapper {
 
     public TicketInfoDto map(Trip trip, PaymentStatus paymentStatus) {
-        return TicketInfoDto.builder()
-                .departureStation(trip.getDepartureStation())
-                .arrivalStation(trip.getArrivalStation())
-                .departureDate(trip.getDepartureDate())
-                .departureTime(trip.getDepartureTime())
-                .price(trip.getPrice())
-                .availableTickets(trip.getAvailableTickets())
-                .paymentStatus(paymentStatus)
-                .build();
+        return new TicketInfoDto(
+                trip.getDepartureStation(),
+                trip.getArrivalStation(),
+                trip.getDepartureDate(),
+                trip.getDepartureTime(),
+                trip.getPrice(),
+                trip.getAvailableTickets(),
+                paymentStatus);
     }
 }

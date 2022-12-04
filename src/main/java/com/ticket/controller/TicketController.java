@@ -3,7 +3,6 @@ package com.ticket.controller;
 import com.ticket.dto.ResponseTicketIdDto;
 import com.ticket.dto.TicketCreatingDto;
 import com.ticket.dto.TicketInfoDto;
-import com.ticket.dto.PaymentCreatingDto;
 import com.ticket.service.TicketService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +20,7 @@ public class TicketController {
 
     @GetMapping("/{id}")
     public TicketInfoDto getTicketInfo(@PathVariable(name = "id") Long ticketId) {
-       return ticketService.getTicketInfo(ticketId);
+        return ticketService.getTicketInfo(ticketId);
     }
 
     @PostMapping

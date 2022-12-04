@@ -4,5 +4,6 @@ import lombok.Data;
 
 @Data
 public class ResponsePaymentIdDto {
-    private final Long paymentId;
+
+    private Long paymentId;
 }

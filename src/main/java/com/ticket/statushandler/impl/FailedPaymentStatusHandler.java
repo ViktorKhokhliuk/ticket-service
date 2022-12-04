@@ -2,7 +2,6 @@ package com.ticket.statushandler.impl;
 
 import com.ticket.domain.Payment;
 import com.ticket.domain.Ticket;
-import com.ticket.domain.Trip;
 import com.ticket.service.TicketService;
 import com.ticket.service.TripService;
 import com.ticket.statushandler.PaymentStatusHandler;

@@ -8,7 +8,7 @@ import com.ticket.dto.TicketCreatingDto;
 import com.ticket.dto.TicketInfoDto;
 import com.ticket.dto.PaymentCreatingDto;
 import com.ticket.exception.EntityNotFoundException;
-import com.ticket.mapper.TicketDtoToPaymentDtoMapper;
+import com.ticket.mapper.ToPaymentCreatingDtoMapper;
 import com.ticket.mapper.ToTicketMapper;
 import com.ticket.mapper.ToTicketInfoDtoMapper;
 import com.ticket.repository.TicketRepository;
@@ -25,14 +25,14 @@ public class TicketServiceImpl implements TicketService {
     private final PaymentService paymentService;
     private final TripService tripService;
     private final ToTicketMapper ticketMapper;
-    private final TicketDtoToPaymentDtoMapper paymentDtoMapper;
+    private final ToPaymentCreatingDtoMapper paymentDtoMapper;
     private final ToTicketInfoDtoMapper ticketInfoDtoMapper;
 
     @Override
     @Transactional
     public Ticket buyTicket(TicketCreatingDto ticketCreatingDto) {
         Trip updatedTrip = tripService.decreaseAvailableTickets(ticketCreatingDto.getTripId());
-        PaymentCreatingDto paymentCreatingDto = paymentDtoMapper.map(ticketCreatingDto);
+        PaymentCreatingDto paymentCreatingDto = paymentDtoMapper.map(ticketCreatingDto, updatedTrip.getPrice());
         Long paymentId = paymentService.payForTicket(paymentCreatingDto).getPaymentId();
         Ticket ticket = ticketMapper.map(paymentCreatingDto, updatedTrip.getId(), paymentId);
         return ticketRepository.save(ticket);
@@ -49,6 +49,6 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public Ticket findByPaymentId(Long paymentId) {
-        return null;
+        return ticketRepository.findByPaymentId(paymentId);
     }
 }

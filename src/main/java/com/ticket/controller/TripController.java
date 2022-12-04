@@ -17,5 +17,4 @@ public class TripController {
     public Iterable<Trip> findAll() {
         return tripService.findAll();
     }
-
 }

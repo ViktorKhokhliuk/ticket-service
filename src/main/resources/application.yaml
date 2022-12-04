@@ -4,8 +4,10 @@ spring:
     url: jdbc:mariadb://localhost:3306/ticket_service_db?createDatabaseIfNotExist=true
     username: root
     password: root
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 
-  jpa:
-    show-sql: true
-
-fixed_delay_seconds: 5
+fixedDelaySeconds: 20
+paymentService:
+  url: http://localhost:8081/payments

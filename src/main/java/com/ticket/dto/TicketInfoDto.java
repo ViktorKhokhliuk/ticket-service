@@ -1,13 +1,12 @@
 package com.ticket.dto;
 
 import com.ticket.domain.PaymentStatus;
-import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@Builder
+@Data
 public class TicketInfoDto {
 
     private final String departureStation;

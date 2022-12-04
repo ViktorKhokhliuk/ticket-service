@@ -1,14 +1,12 @@
 package com.ticket.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
-@AllArgsConstructor
-@Getter
+@Data
 public class ErrorResponseDto {
 
-    private String message;
-    private LocalDateTime timeStamp;
+    private final String message;
+    private final LocalDateTime timeStamp;
 }

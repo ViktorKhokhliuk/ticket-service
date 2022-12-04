@@ -8,7 +8,8 @@ import com.ticket.dto.PaymentCreatingDto;
 import java.util.List;
 
 public interface PaymentService {
-    PaymentStatus getPaymentStatus(Long paymentId);
+
+    PaymentStatus findPaymentStatusById(Long paymentId);
 
     ResponsePaymentIdDto payForTicket(PaymentCreatingDto paymentCreatingDto);
 
@@ -16,5 +17,5 @@ public interface PaymentService {
 
     List<Payment> findAllByStatus(PaymentStatus status);
 
-    void saveAll(List<Payment> payments);
+    void updateAll(List<Payment> payments);
 }
